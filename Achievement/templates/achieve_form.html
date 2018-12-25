@@ -1,0 +1,150 @@
+
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block body_block %}
+
+<div class="container" style="padding-bottom: 100px" >
+    <div class ="row">
+        <div class="col-md-12">
+
+            <form id="cat_form" style='border:0.5px solid gray;padding: 50px'>
+                <div class="row" style="width:100%" id="add">
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+                            <label for="head">Heading</label>
+                            <input type="text" name="heading" placeholder="Heading"  class="form-control input-tip" id="head" />
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-left: 10px;padding-right:30px">
+                        <div class="form-group">
+                            <label for="disc">Discription</label>
+                            <textarea  name="discription" placeholder="Discription"  class="form-control input-tip" id="disc" ></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="add_stu">
+                    </div>
+
+                    <div class="col-md-12" id="new_div">
+                    </div>
+
+                    <input type="button" id ="add_more" name="Add more" value="Add More Student" class="btn btn-success" style="margin-left: 50px">
+
+                </div>
+
+
+                <div style="border-radius: 10px 10px;padding:6px;width: 262px;display: none;background: lightgray"id="div_img_container">
+                    <img id="uploaded_img" width="250px"height="auto">
+                </div>
+
+
+                <input type="file" id="file_input" onchange="showFile(event)" style="display: none" name="file">
+                <br>
+                 <h5>UPLOAD IMAGE</h5>
+                <p>ONLY JPG,JPEG,GIF ARE ACCEPTABLE</p>
+                <button type="button" class="btn btn-secondary" onclick="uploadFile()" style="margin: 10px"><span class="glyphicon glyphicon-plus">&nbsp;Browse</span></button>
+<br>
+                <button type="submit" class="btn btn-primary" id="add_achieve" style="margin-top: 50px;margin-left: 35px;">Submit</button>
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+        var uploadField=document.getElementById('file_input');
+        function uploadFile()
+        {
+            uploadField.click();
+        }
+        function showFile(event) {
+            const url=URL.createObjectURL(event.target.files[0]);
+            const extn=uploadField.files.item(0).name.split(".")[1];
+            if(extn==='png'|| extn==='jpg' || extn==='jpeg')
+            {
+                const size=uploadField.files.item(0).size;
+                document.getElementById('uploaded_img').src=url;
+                document.getElementById('div_img_container').style.display="block";
+
+            }
+            else
+            {
+                alert('Invalid Image Type');
+            }
+        }
+
+    </script>
+
+<script>
+
+    $(document).ready(function () {
+        var count =1 ;
+
+
+        var a = "<div class='col-md-12' style='padding: 10px;'>"
+            +"<div class='col-md-6' style='padding: 10px'>" +
+            "<input type='text' placeholder='Student Name' class='form-control' name='name"+count+"' style='margin-bottom: 5px'>"+"</div>"
+            +"<div class='col-md-6' style=' padding: 10px;'>" +
+            "<input type='text' placeholder='Enrollment Number' class='form-control' name='eno"+count+"' style='margin-bottom: 5px'>"+"</div>"+"</div>";
+
+        $("#add_stu").append(a);
+
+
+        $("#add_more").click(function () {
+            count = count+1;
+
+             var a = "<div class='col-md-12' style='padding: 10px;'>"
+            +"<div class='col-md-6' style='padding: 10px'>" +
+            "<input type='text' placeholder='Student Name' class='form-control' name='name"+count+"' style='margin-bottom: 5px'>"+"</div>"
+            +"<div class='col-md-6' style=' padding: 10px;'>" +
+            "<input type='text' placeholder='Enrollment Number' class='form-control' name='eno"+count+"' style='margin-bottom: 5px'>"+"</div>"+"</div>";
+
+            console.log("hello");
+
+            $("#new_div").append(a);
+
+
+        });
+
+
+        $("#cat_form").submit(function (e) {
+
+            e.preventDefault();
+            var formData = new FormData($(this)[0]) ;
+            $.ajax({
+
+                url : "{%url 'achievement'%}",
+                type : "POST",
+                data : formData,
+
+                success:function (result) {
+                    console.log("sucess");
+                    location.reload(true);
+                },
+                error:function (e) {
+
+
+                    alert("error")
+
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+
+
+            });
+
+
+        });
+
+    });
+
+</script>
+
+
+
+{% endblock %}

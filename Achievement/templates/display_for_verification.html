@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Title</title>
+</head>
+<style>
+    body {
+        padding: 32px;
+        display: flex;
+        justify-content: center;
+        background-color: skyblue;
+    }
+
+    .expandable-list {
+        width: 50%;
+        background-color: white;
+        border-radius: 3px;
+    }
+    .expandable-list__item {
+        padding: 24px;
+    }
+    .expandable-list__item--expanded {
+        box-shadow: 0 2px 0 0 skyblue inset, 0 2px 0 0 skyblue;
+    }
+    .expandable-list__item--expanded:first-child {
+        box-shadow: 0 2px 0 0 skyblue;
+    }
+    .expandable-list__item--expanded:last-child {
+        box-shadow: 0 2px 0 0 skyblue inset;
+    }
+    .expandable-list__item-wrapper {
+        cursor: pointer;
+    }
+    .expandable-list__item-wrapper:last-child .expandable-list__divider {
+        box-shadow: none;
+    }
+    .expandable-list__item-content {
+        padding: 24px;
+    }
+    .expandable-list__divider {
+        height: 2px;
+        box-shadow: 0 2px 0 0 skyblue;
+        margin-left: 24px;
+    }
+
+</style>
+<body>
+{%block content%}
+
+
+
+
+
+
+<div class="expandable-list">
+    <div align="center">
+     <h3> <strong>Achievements form for verification</strong></h3>
+        </div>
+    {%for i in obj%}
+    <div class="expandable-list__item-wrapper">
+        <div class="expandable-list__item"><strong>{{i.heading}}</strong></div>
+        <div class="expandable-list__item-content">
+
+
+
+            <div class="expandable-list__item-content">
+                <img src="http://127.0.0.1:8000/media/{{i.image}}" style="width: 200px;height: auto;margin-bottom:20px ">
+
+            <br><label for="disc">Discription</label>
+            <p id="disc" >
+
+                {{i.discription}}
+            </p>
+
+            </div>
+
+            <p>Student that are participated in this</p>
+            {%for j in i.student.all%}
+            <ul>
+                <li>{{j.name}}</li>
+            </ul>
+            {%endfor%}
+            <input type="button" class="btn btn-success verify" value="Verify" id="{{i.id}}">
+
+        </div>
+
+        <div class="expandable-list__divider"></div>
+    </div>
+
+    {%endfor%}
+</div>
+
+
+
+
+
+{%endblock%}
+<script>
+
+
+    $(document).ready(function () {
+
+
+
+    $('.expandable-list__item-content').toggle();
+    $('.expandable-list__item-wrapper').click(function() {
+        $(this).toggleClass('expandable-list__item--expanded');
+        $(this).find('.expandable-list__item-content').toggle();
+
+
+    });
+
+
+    $(".verify").click(function (e) {
+
+        e.preventDefault();
+
+        $.ajax({
+
+            url:"{%url 'verify'%}",
+            type:"POST",
+            data:{id:$(this).attr("id")},
+            success:function (result) {
+                alert(result)
+
+            },
+
+
+        });
+
+    });
+
+
+    });
+</script>
+
+</body>
+</html>
